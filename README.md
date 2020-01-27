@@ -72,7 +72,7 @@ project: REACT-navigation
 		}
 		export default FirstPage;
 
-	9. Create `src/components/SecondtPage/SecondtPage.scss`, `src/components/SecondtPage/SecondtPage.js`
+	9. Create `src/components/SecondPage/SecondPage.scss`, `src/components/SecondPage/SecondPage.js`
 		import React, { Component } from 'react';
 		import './SecondPage.scss';
 
@@ -174,3 +174,147 @@ project: REACT-navigation
 		## меняем тег `<a>` на тег `<Link>`
 		<Link href="/" className = "ui button">One</Link>
         <Link href="/second" className = "ui button">Two</Link>
+
+ ## ***************** Route menu between twice pages (v.1.0) ************************* ##
+
+# STEP 4:
+## Change menu according to the rules REDUX Cycle 
+
+	## Action Creator - to change state of our app
+	## Action 
+	## dispatch 
+	## Middleware 
+	## Reducers 
+	## State 
+
+	18. Create `public/json/headermenu.json`
+		## create file with data (menu items):
+		{
+			"headermenu" : [
+				{"id": 1, "name": "One", "link": "/"},
+				{"id": 2, "name": "Two", "link": "/second"}
+			]
+		}
+		
+	19. console:
+		npm i --save axios@0.18.1
+		
+	20. Create configuration file with pre-configuration `src/apis/headermenu.js`:
+		## данные не меняются (константы)
+		import axios from 'axios';
+
+		export default axios.create({
+			baseURL: '/'
+		});
+		
+	21. Create `src/actions/index.js`
+		## `Action creator` + `Action`:
+		import headermenu from '../apis/headermenu';
+		export const fetchMenuitems = () => async dispatch =>{
+			const responce = await headermenu.get('/headermenu.json');
+			dispatch( {type: 'FETCH_MENUITEMS', payload: responce.data.headermenu } )
+		};
+		
+	22. console:
+		npm i --save redux-thunk
+		npm i --save redux react-redux
+		
+	23. Create `src/reducers/index.js`
+		## если нет данных для передачи, мы все-равно должны что-то передавать.
+		## Поэтому или убираем `import reducers from './reducers';` или добавлем `dummy reducers`:
+		import { combineReducers } from 'redux';
+		export default combineReducers({
+			dummyKey: 'replaceMe'
+		});
+		
+	23. Edit `src/index.js`:
+		import { Provider } from 'react-redux';
+		import { createStore, applyMiddleware } from 'redux';
+		import reducers from './reducers';
+		import thunk from 'redux-thunk';
+
+		const store = createStore(reducers, applyMiddleware(thunk));
+
+		ReactDOM.render(
+			<Provider store={store}>
+				<App />
+			</Provider>, 
+			document.querySelector("#root")
+		);
+	
+	24. Create `src/reducers/menuitemsReducer.js`
+		export default () => {
+			return 'replaceMe';
+		}
+	
+	25. Edit `src/reducers/index.js`
+	## import
+		import menuitemsReducer from './menuitemsReducer';
+		...
+		export default combineReducers({
+			menuitems: menuitemsReducer
+		});
+	
+	26. Edit `src/reducers/menuitemsReducer.js`
+		## Switch Statements in Reducers:
+		export default (state=[], action) => {
+			switch (action.type){ // see to `src/actions/index.js`
+				case 'FETCH_MENUITEMS':
+					return action.payload;
+				
+				default: 
+					return state;
+			}
+		}
+	
+	
+	29. Edit `src/components/HeaderMenu/HeaderMenu.js`:
+	## функция connect() создает для нас компонент. 
+	import { fetchMenuitems } from '../../actions';
+	import { connect } from 'react-redux';
+	...
+	componentDidMount (){
+		this.props.fetchMenuitems();
+    };
+	...
+	## dispatching correct values - получаем значения
+	const mapStateToProps = (state) =>{ // see to `src/reducers/index.js`
+		return { 
+			menuitems: state.menuitemsReducer
+		};
+	}
+
+	export default connect(mapStateToProps,{
+		fetchMenuitems: fetchMenuitems 		// see to `src/actions/index.js`
+	})(HeaderMenu);
+	
+	## список кнопочек мы получили
+	
+	
+	30. Edit `src/components/HeaderMenu/HeaderMenu.js`:
+	## вывод данных на экран
+	## создаем функцию, которая перебирает элементы масасива, который мы получили в `this.props.menuitems`
+	## добавляем css: 
+    renderList(){
+        return this.props.menuitems.map(menuitem =>{
+            return (
+                <Link to={menuitem.link} className = "ui button" key={menuitem.id}>
+                    {menuitem.name}
+                </Link>
+            );
+        });
+    }
+	
+	## выводим на экран результат выполнения функции:
+    return( 
+        <div className="row">
+            <div className = "column HeaderMenu">
+                <div className="ui basic buttons">
+                    {this.renderList()}
+                </div>
+            </div>
+        </div>
+    );
+	
+
+	
