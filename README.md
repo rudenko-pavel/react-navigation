@@ -316,5 +316,23 @@ project: REACT-navigation
         </div>
     );
 	
+	
+ ## ***************** Change menu according to the rules REDUX Cycle ************************* ##
 
+# STEP 5:
+### *** Extend ESLint configuration ***
+	npm i eslint eslint-config-airbnb eslint-config-prettier eslint-plugin-jsx-a11y eslint-plugin-prettier eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-simple-import-sort prettier --save-dev
+
+	add file `.eslintrc` to root directory
+	npm run lint
+
+
+## ********************** Extend ESLint configuration ****************************** ##
+
+
+	
+	
+	
+	
+	
 	

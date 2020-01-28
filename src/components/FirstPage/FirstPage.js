@@ -1,13 +1,10 @@
-import React, { Component } from 'react';
-import './FirstPage.scss';
+import "./FirstPage.scss";
 
-class FirstPage extends Component{
-    render(){
-        return( 
-            <div className = "FirstPage">
-                First Page
-            </div>
-        );
-    }
+import React, { Component } from "react";
+
+class FirstPage extends Component {
+  render() {
+    return <div className="FirstPage">First Page</div>;
+  }
 }
 export default FirstPage;
