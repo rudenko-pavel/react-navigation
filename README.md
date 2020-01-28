@@ -320,19 +320,73 @@ project: REACT-navigation
  ## ***************** Change menu according to the rules REDUX Cycle ************************* ##
 
 # STEP 5:
-### *** Extend ESLint configuration ***
-	npm i eslint eslint-config-airbnb eslint-config-prettier eslint-plugin-jsx-a11y eslint-plugin-prettier eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-simple-import-sort prettier --save-dev
+	### *** Extend ESLint configuration ***
+		npm i eslint eslint-config-airbnb eslint-config-prettier eslint-plugin-jsx-a11y eslint-plugin-prettier eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-simple-import-sort prettier --save-dev
 
-	add file `.eslintrc` to root directory
-	npm run lint
+		add file `.eslintrc` to root directory
+		npm run lint
 
 
 ## ********************** Extend ESLint configuration ****************************** ##
 
+# STEP 6:
+	## add `selectedItemMenu`:  
+	
+	31. Edit `src/actions/index.js` (Action creator): 
+		export const selectItemMenu = id => {
+		  return {
+			// Return an action
+			type: "ITEMMENU_SELECTED",
+			payload: id
+		  };
+		};
+	
+	32. Create `src/reducers/menuselectedReducer.js`:     
+	    ## возможные варианты `action.type` берутся из `src/actions/index.js`
+		export default (selectedItem = 1, action) => {
+		  switch (action.type) {
+			// see to `src/actions/index.js`
+			case "ITEMMENU_SELECTED":
+			  return action.payload;
 
+			default:
+			  return selectedItem;
+		  }
+		};	
+		
+	33. Edit:
+		import menuselectedReducer from "./menuselectedReducer";
+		...
+		export default combineReducers({
+			menuitems: menuitemsReducer, 
+			menuselected: menuselectedReducer			// add thsis string
+		});
 	
+	34. Add to `src/component/HeaderMenu.js`:
+		import { fetchMenuitems, selectItemMenu } from "../../actions";
+		...
+		export default connect(mapStateToProps, {fetchMenuitems, selectItemMenu})(ItemsList);
+		
+	35.	Edit `src/component/HeaderMenu.js`:
+          renderList() {
+			let currentItemMenu = "";
+
+			return this.props.menuitems.map(menuitem => {
+			  // eslint-disable-next-line no-unused-expressions
+			  menuitem.id === this.props.menuselected
+				? (currentItemMenu = "blue basic")
+				: (currentItemMenu = "");
+			  return (
+				<Link
+				  to={menuitem.link}
+				  className={"ui button "+currentItemMenu}
+				  key={menuitem.id}
+				  onClick={() => this.props.selectItemMenu(menuitem.id)}
+				>
+				  {menuitem.name}
+				</Link>
+			  );
+			});
+		  }
 	
-	
-	
-	
-	
+##  *************************** Add `selectItem` to HeaderMenu ************************	 ##
