@@ -2,40 +2,34 @@ import "./HeaderMenu.scss";
 
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
-import { fetchMenuitems, selectItemMenu } from "../../actions";
+import { fetchMenuitems } from "../../actions";
 
 class HeaderMenu extends Component {
   componentDidMount() {
     this.props.fetchMenuitems();
-    //  this.props.selectItemMenu();
   }
 
   renderList() {
-    let currentItemMenu = "";
-
     return this.props.menuitems.map(menuitem => {
-      // eslint-disable-next-line no-unused-expressions
-      menuitem.id === this.props.menuselected
-        ? (currentItemMenu = "blue basic")
-        : (currentItemMenu = "");
       return (
-        <Link
+        <NavLink
+          exact
           to={menuitem.link}
-          className={`ui button ${currentItemMenu}`}
+          className="ui button"
           key={menuitem.id}
-          onClick={() => this.props.selectItemMenu(menuitem.id)}
+          activeClassName="blue basic"
         >
           {menuitem.name}
-        </Link>
+        </NavLink>
       );
     });
   }
 
   render() {
     // eslint-disable-next-line max-len
-    // console.log("render(menuitems)", this.props.menuitems,"selectItemMenu: ",this.props.menuselected);
+    // console.log("render(menuitems)", this.props.menuitems);
     return (
       <div className="row">
         <div className="column HeaderMenu">
@@ -48,12 +42,10 @@ class HeaderMenu extends Component {
 const mapStateToProps = state => {
   // see to `src/reducers/index.js`
   return {
-    menuitems: state.menuitems,
-    menuselected: state.menuselected
+    menuitems: state.menuitems
   };
 };
 
 export default connect(mapStateToProps, {
-  fetchMenuitems, // see to `src/actions/index.js`
-  selectItemMenu
+  fetchMenuitems // see to `src/actions/index.js`
 })(HeaderMenu);

@@ -320,7 +320,7 @@ project: REACT-navigation
  ## ***************** Change menu according to the rules REDUX Cycle ************************* (look up) ##
 
 # STEP 5:
-	### *** Extend ESLint configuration ***
+	### *** Extend ESLint configuration *** 
 		npm i eslint eslint-config-airbnb eslint-config-prettier eslint-plugin-jsx-a11y eslint-plugin-prettier eslint-plugin-react eslint-plugin-react-hooks eslint-plugin-simple-import-sort prettier --save-dev
 
 		add file `.eslintrc` to root directory
@@ -410,3 +410,24 @@ project: REACT-navigation
 	<BrowserRouter></BrowserRouter>
 
 ##  *************************** Add `HashRouter` to App **************************** (look up)	 ##
+
+	35. Edit `src/component/HeaderMenu.js`:
+	## Вместо <Link> - <NavLink>
+	import { NavLink } from "react-router-dom";
+	...
+	return (
+        <NavLink
+          exact
+          to={menuitem.link}
+          className="ui button"
+          key={menuitem.id}
+          activeClassName="blue basic"
+        >
+          {menuitem.name}
+        </NavLink>
+		
+	36. Edit `src/component/HeaderMenu.js`:
+		## убираем onClick() и  `this.props.selectItemMenu`, `menuselected` , `currentItemMenu`
+		
+		
+##  *************************** change css for Active Link ************************** (look up)	 ##

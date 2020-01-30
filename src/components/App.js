@@ -14,7 +14,7 @@ const App = () => {
         <div>
           <HeaderMenu />
           <Route path="/" exact component={FirstPage} />
-          <Route path="/second" component={SecondPage} />
+          <Route path="/second" exact component={SecondPage} />
         </div>
       </HashRouter>
     </div>
