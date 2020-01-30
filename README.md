@@ -175,7 +175,7 @@ project: REACT-navigation
 		<Link href="/" className = "ui button">One</Link>
         <Link href="/second" className = "ui button">Two</Link>
 
- ## ***************** Route menu between twice pages (v.1.0) ************************* ##
+ ## ***************** Route menu between twice pages (v.1.0) ************************* (look up) ##
 
 # STEP 4:
 ## Change menu according to the rules REDUX Cycle 
@@ -268,7 +268,7 @@ project: REACT-navigation
 		}
 	
 	
-	29. Edit `src/components/HeaderMenu/HeaderMenu.js`:
+	27. Edit `src/components/HeaderMenu/HeaderMenu.js`:
 	## функция connect() создает для нас компонент. 
 	import { fetchMenuitems } from '../../actions';
 	import { connect } from 'react-redux';
@@ -291,7 +291,7 @@ project: REACT-navigation
 	## список кнопочек мы получили
 	
 	
-	30. Edit `src/components/HeaderMenu/HeaderMenu.js`:
+	28. Edit `src/components/HeaderMenu/HeaderMenu.js`:
 	## вывод данных на экран
 	## создаем функцию, которая перебирает элементы масасива, который мы получили в `this.props.menuitems`
 	## добавляем css: 
@@ -317,7 +317,7 @@ project: REACT-navigation
     );
 	
 	
- ## ***************** Change menu according to the rules REDUX Cycle ************************* ##
+ ## ***************** Change menu according to the rules REDUX Cycle ************************* (look up) ##
 
 # STEP 5:
 	### *** Extend ESLint configuration ***
@@ -327,12 +327,12 @@ project: REACT-navigation
 		npm run lint
 
 
-## ********************** Extend ESLint configuration ****************************** ##
+## ********************** Extend ESLint configuration ****************************** (look up) ##
 
 # STEP 6:
 	## add `selectedItemMenu`:  
 	
-	31. Edit `src/actions/index.js` (Action creator): 
+	29. Edit `src/actions/index.js` (Action creator): 
 		export const selectItemMenu = id => {
 		  return {
 			// Return an action
@@ -341,7 +341,7 @@ project: REACT-navigation
 		  };
 		};
 	
-	32. Create `src/reducers/menuselectedReducer.js`:     
+	30. Create `src/reducers/menuselectedReducer.js`:     
 	    ## возможные варианты `action.type` берутся из `src/actions/index.js`
 		export default (selectedItem = 1, action) => {
 		  switch (action.type) {
@@ -353,21 +353,29 @@ project: REACT-navigation
 			  return selectedItem;
 		  }
 		};	
-		
-	33. Edit:
+	
+	31.  Edit `src/reducers/index.js`:
 		import menuselectedReducer from "./menuselectedReducer";
 		...
 		export default combineReducers({
 			menuitems: menuitemsReducer, 
-			menuselected: menuselectedReducer			// add thsis string
+			menuselected: menuselectedReducer			// add this string
 		});
 	
-	34. Add to `src/component/HeaderMenu.js`:
+	32. Add to `src/component/HeaderMenu.js`:
 		import { fetchMenuitems, selectItemMenu } from "../../actions";
+		...
+		const mapStateToProps = state => {
+		  // see to `src/reducers/index.js`
+		  return {
+			menuitems: state.menuitems,
+			menuselected: state.menuselected
+		  };
+		};
 		...
 		export default connect(mapStateToProps, {fetchMenuitems, selectItemMenu})(ItemsList);
 		
-	35.	Edit `src/component/HeaderMenu.js`:
+	33.	Edit `src/component/HeaderMenu.js`:
           renderList() {
 			let currentItemMenu = "";
 
@@ -379,7 +387,7 @@ project: REACT-navigation
 			  return (
 				<Link
 				  to={menuitem.link}
-				  className={"ui button "+currentItemMenu}
+				  className={`ui button ${currentItemMenu}`}
 				  key={menuitem.id}
 				  onClick={() => this.props.selectItemMenu(menuitem.id)}
 				>
@@ -389,4 +397,16 @@ project: REACT-navigation
 			});
 		  }
 	
-##  *************************** Add `selectItem` to HeaderMenu ************************	 ##
+##  *************************** Add `selectItem` to HeaderMenu ************************	(look up) ##
+
+
+	34. Edit `src/components/App.js`:
+	import { HashRouter, Route } from "react-router-dom";
+	instead 
+	import { BrowserRouter, Route } from "react-router-dom";
+
+	<HashRouter></HashRouter>
+	instead
+	<BrowserRouter></BrowserRouter>
+
+##  *************************** Add `HashRouter` to App **************************** (look up)	 ##

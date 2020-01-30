@@ -23,7 +23,7 @@ class HeaderMenu extends Component {
       return (
         <Link
           to={menuitem.link}
-          className={"ui button "+currentItemMenu}
+          className={`ui button ${currentItemMenu}`}
           key={menuitem.id}
           onClick={() => this.props.selectItemMenu(menuitem.id)}
         >
